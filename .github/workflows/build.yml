@@ -15,18 +15,15 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.9'
 
     - name: Install system deps
       run: |
         sudo apt-get update -qq
         sudo apt-get install -y git zip unzip python3-dev libffi-dev libssl-dev build-essential
-        pip install buildozer cython
-
-    - name: Setup Android SDK
-      run: |
-        yes | sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2" || true
-        yes | sdkmanager --licenses || true
+        pip install --upgrade pip
+        pip install buildozer==1.5.0
+        pip install cython==0.29.37
 
     - name: Build APK
       run: buildozer android debug
