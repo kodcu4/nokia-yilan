@@ -1,18 +1,23 @@
-[app]
-title = Nokia Yilan
-package.name = nokiayilan
-package.domain = org.oyun
-source.dir = .
-source.include_exts = py
-version = 1.0
-requirements = python3,pygame
-orientation = portrait
-fullscreen = 1
-android.api = 33
-android.minapi = 21
-android.ndk = 25b
-android.archs = arm64-v8a
+name: Build APK
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
 
-[buildozer]
-log_level = 1
-warn_on_root = 1
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip build-essential git zip unzip openjdk-17-jdk python3-dev libffi-dev libssl-dev
+        pip3 install buildozer cython
+
+    - name: Build APK
+      run: |
+        buildozer android debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: nokia-yilan-apk
+        path: bin/*.apk
